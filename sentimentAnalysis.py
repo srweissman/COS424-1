@@ -108,11 +108,11 @@ def bagOfWords(train_bag, train_class, test_bag, test_class, label):
 	print
 
 	print "SVM (Linear Kernel)"
-#	svml = SVC(kernel='linear', probability=True)
+	svml = SVC(kernel='linear', probability=True)
 	start = time.time()
-	svml = LinearSVC()
-	clf = CalibratedClassifierCV(svml)
-	predictFit(clf, train_bag, train_class, test_bag, test_class)
+#	svml = LinearSVC()
+#	clf = CalibratedClassifierCV(svml)
+	predictFit(svml, train_bag, train_class, test_bag, test_class)
 	end = time.time()
 	print "time: ", (end - start)
 	calcROC(svml, test_bag, test_class, 'SVML' + label)
