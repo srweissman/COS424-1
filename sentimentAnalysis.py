@@ -198,13 +198,13 @@ def main():
 	plt.figure()
 
 	# TODO: make files command line args
-	train_bag = load_file('train_out_bag_of_words_5.csv')
-	train_class = load_file_txt('train_out_classes_5.txt')
-	test_bag = load_file('test_out_bag_of_words_0.csv')
-	test_class = load_file_txt('test_out_classes_0.txt')
-	traincorpus = parseData('train.txt')
-	testcorpus = parseData('test.txt')
-	trainvocab = load_file_words('train_out_vocab_5.txt')
+	train_bag = load_file('data/train_out_bag_of_words_5.csv')
+	train_class = load_file_txt('data/train_out_classes_5.txt')
+	test_bag = load_file('data/test_out_bag_of_words_0.csv')
+	test_class = load_file_txt('data/test_out_classes_0.txt')
+	traincorpus = parseData('data/train.txt')
+	testcorpus = parseData('data/test.txt')
+	trainvocab = load_file_words('data/train_out_vocab_5.txt')
 
 	print 'BOW'
 	bagOfWords(train_bag, train_class, test_bag, test_class,'')
