@@ -67,7 +67,8 @@ def predictFit(clf, train_data, train_class, test_data, test_class):
 	print "f1 score: ", metrics.f1_score(test_class, predicted)
 	print metrics.classification_report(test_class, predicted)
 
- 	
+	
+# code modified from http://machinelearningmastery.com/feature-selection-in-python-with-scikit-learn/
 def featureSelection(train_bag, train_class, test_bag, test_class, trainvocab):
 	model = LogisticRegression()
 	rfe = RFE(model, 100)
@@ -147,15 +148,16 @@ def bagOfWords(train_bag, train_class, test_bag, test_class, label):
 
 
 def ngrams(traincorpus, train_class, testcorpus, test_class, n):
-	bigram_vectorizer = CountVectorizer(ngram_range=(1, n),
+	# this chunk (ngram vectorization) modified from http://scikit-learn.org/stable/modules/feature_extraction.html
+	ngram_vectorizer = CountVectorizer(ngram_range=(1, n),
 		token_pattern=r'\b\w+\b', min_df=1)
-	train_bigrams = bigram_vectorizer.fit_transform(traincorpus).toarray()
-	test_bigrams = bigram_vectorizer.transform(testcorpus).toarray()
+	train_ngrams = ngram_vectorizer.fit_transform(traincorpus).toarray()
+	test_ngrams = ngram_vectorizer.transform(testcorpus).toarray()
 
 	print "Naive Bayes"
 	start = time.time()
 	naive = MultinomialNB()
-	predictFit(naive, train_bigrams, train_class, test_bigrams, test_class)
+	predictFit(naive, train_ngrams, train_class, test_ngrams, test_class)
 	end = time.time()
 	print "time: ", (end - start)
 	print
@@ -164,7 +166,7 @@ def ngrams(traincorpus, train_class, testcorpus, test_class, n):
 	start = time.time()
 	svml = SVC(kernel='linear', probability=True)
 	#svml = LinearSVC()
-	predictFit(svml, train_bigrams, train_class, test_bigrams, test_class)
+	predictFit(svml, train_ngrams, train_class, test_ngrams, test_class)
 	end = time.time()
 	print "time: ", (end - start)
 	print
@@ -174,7 +176,7 @@ def ngrams(traincorpus, train_class, testcorpus, test_class, n):
 	# 	alpha=1e-3, n_iter=5, random_state=42)
 	start = time.time()
 	svmg = SVC(kernel='rbf', probability=True)
-	predictFit(svmg, train_bigrams, train_class, test_bigrams, test_class)
+	predictFit(svmg, train_ngrams, train_class, test_ngrams, test_class)
 	end = time.time()
 	print "time: ", (end - start)
 	print
@@ -182,14 +184,14 @@ def ngrams(traincorpus, train_class, testcorpus, test_class, n):
 	print "Logistic Regression"
 	start = time.time()
 	logreg = linear_model.LogisticRegression()
-	predictFit(logreg, train_bigrams, train_class, test_bigrams, test_class)
+	predictFit(logreg, train_ngrams, train_class, test_ngrams, test_class)
 	end = time.time()
 	print "time: ", (end - start)
 
 	print "Decision Tree"
 	start = time.time()
 	dt = DecisionTreeClassifier(min_samples_split=20, random_state=99)
-	predictFit(dt, train_bigrams, train_class, test_bigrams, test_class)
+	predictFit(dt, train_ngrams, train_class, test_ngrams, test_class)
 	end = time.time()
 	print "time: ", (end - start)
 
@@ -208,6 +210,7 @@ def main():
 
 	print 'BOW'
 	bagOfWords(train_bag, train_class, test_bag, test_class,'')
+	# plotting code modified from http://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
 	# UNCOMMENT TO PLOT ROC CURVE
 	# plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
 	# plt.xlim([0.0, 1.0])
